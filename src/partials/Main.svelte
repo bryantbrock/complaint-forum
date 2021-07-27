@@ -1,23 +1,50 @@
 <script>
-  import {complaint} from '../store.js';
-  import {Complaints} from '../client.js';
+  import {onMount} from 'svelte';
+  import {writable} from 'svelte/store';
+  import {Complaints, Users} from '../client';
+  import {sortBy} from '../util/misc';
+
+  const newComplaint = writable({text: null});
+  const user = writable({});
+
+  let complaints = [];
+
+  onMount(async () => {
+    let {records: data} = await Complaints();
+    let {records: users} = await Users();
+
+    ([$user] = users.filter(user => user.fields.email === 'bryantleebrock@gmail.com'));
+    complaints = sortBy('createdTime', data);
+
+    console.log($user)
+  })
 
   const onSubmit = async () => {
-    await Complaints({
+    const {records: [complaint]} = await Complaints({
       method: 'POST',
       data: {
-        records: [{fields: {text: $complaint.text}}]
+        records: [{fields: {
+          text: $newComplaint.text,
+          userId: $user.id,
+        }}]
       }
     })
+
+    complaints = [complaint, ...complaints];
   }
 </script>
 
 <div>
+
+  {#if $user.fields}
+    <div>Welcome, {$user.fields.firstName}</div>
+  {/if}
+
   <form on:submit|preventDefault={onSubmit}>
     <input
       type="text"
       placeholder="What is on your mind?"
-      bind:value={$complaint.text}
+      bind:value={$newComplaint.text}
       class="rounded-lg border-2 border-gray-200 p-4 w-full"
     >
     <input
@@ -26,4 +53,11 @@
       class="my-2 p-2 bg-gray-200 rounded cursor-pointer hover:bg-gray-300"
     >
   </form>
+
+  <div>
+    {#each complaints as complaint}
+      <div>{complaint.fields.text}</div>
+    {/each}
+  </div>
+
 </div>

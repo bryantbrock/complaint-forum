@@ -44,3 +44,9 @@ export const toPctChange = arr =>
     }
     return ((val / arr[idx-1]) - 1) * 100
   })
+
+
+export const sortBy = (value, arr, direction = 'asc') =>
+  arr.sort((a, b) => 
+    a[value] > b[value] ? -1 : 1
+  )
