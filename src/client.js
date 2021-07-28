@@ -18,7 +18,13 @@ const createFetcher = endpoint => async ({
     extras.body = JSON.stringify(data)
   }
 
-  const res = await fetch(baseUrl + `/${endpoint}/` + params, extras)
+  if (!!params) {
+    params = Object.keys(params).map(function(key) {
+      return key + '=' + params[key];
+    }).join('&');
+  }
+
+  const res = await fetch(baseUrl + `/${endpoint}?` + params, extras)
 
   return res.json()
 }

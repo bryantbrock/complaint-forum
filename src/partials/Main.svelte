@@ -1,7 +1,7 @@
 <script>
   import {onMount} from 'svelte';
   import {writable} from 'svelte/store';
-  import {Complaints, Users} from '../client';
+  import {Complaints} from '../client';
   import {sortBy} from '../util/misc';
 
   const newComplaint = writable({text: null});
@@ -11,12 +11,9 @@
 
   onMount(async () => {
     let {records: data} = await Complaints();
-    let {records: users} = await Users();
 
-    ([$user] = users.filter(user => user.fields.email === 'bryantleebrock@gmail.com'));
+    ([$user] = [].filter(user => user.fields.email === 'bryantleebrock@gmail.com'));
     complaints = sortBy('createdTime', data);
-
-    console.log($user)
   })
 
   const onSubmit = async () => {
