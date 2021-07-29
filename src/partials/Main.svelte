@@ -8,13 +8,18 @@
   const user = writable({});
 
   let complaints = [];
+  export let signedIn = false;
 
-  onMount(async () => {
+  const getComplaints = async () => {
     let {records: data} = await Complaints();
 
     ([$user] = [].filter(user => user.fields.email === 'bryantleebrock@gmail.com'));
     complaints = sortBy('createdTime', data);
-  })
+  };
+
+  if (signedIn){
+    getComplaints();
+  }
 
   const onSubmit = async () => {
     const {records: [complaint]} = await Complaints({
