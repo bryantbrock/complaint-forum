@@ -1,9 +1,9 @@
 const baseUrl = "https://api.airtable.com/v0/appqX92uDE5P8alZM"
 
-
 const createFetcher = endpoint => async ({
   method = 'GET',
   params = '',
+  id = '',
   data = {}
 } = {}) => {
   const extras = {
@@ -24,11 +24,10 @@ const createFetcher = endpoint => async ({
     }).join('&');
   }
 
-  const res = await fetch(baseUrl + `/${endpoint}?` + params, extras)
+  const res = await fetch(baseUrl + `/${endpoint}${id ? '/' + id : ''}?` + params, extras)
 
   return res.json()
 }
-
 
 export const Complaints = createFetcher('Complaints')
 export const Comments = createFetcher('Comments')

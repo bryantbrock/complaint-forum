@@ -50,3 +50,11 @@ export const sortBy = (value, arr, direction = 'asc') =>
   arr.sort((a, b) => 
     a[value] > b[value] ? -1 : 1
   )
+
+export const toSlug = str =>
+  str.split(' ').map(val => val.toLowerCase()).join('-')
+
+export const getUrlParams = () => 
+  Object.fromEntries(
+    new URLSearchParams(window.location.search).entries()
+  )

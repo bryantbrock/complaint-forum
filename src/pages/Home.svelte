@@ -3,31 +3,26 @@
   import {writable} from 'svelte/store';
   import {Complaints} from '../client';
   import {sortBy} from '../util/misc';
+  import Complaint from '../partials/Complaint.svelte';
 
   const newComplaint = writable({text: null});
-  const user = writable({});
-
   let complaints = [];
-  export let signedIn = false;
+
+  onMount(() => getComplaints());
 
   const getComplaints = async () => {
     let {records: data} = await Complaints();
 
-    ([$user] = [].filter(user => user.fields.email === 'bryantleebrock@gmail.com'));
     complaints = sortBy('createdTime', data);
   };
-
-  if (signedIn){
-    getComplaints();
-  }
 
   const onSubmit = async () => {
     const {records: [complaint]} = await Complaints({
       method: 'POST',
       data: {
         records: [{fields: {
-          text: $newComplaint.text,
-          userId: $user.id,
+          body: $newComplaint.text,
+          userId: [`${localStorage.getItem('userId')}`],
         }}]
       }
     })
@@ -37,11 +32,7 @@
 </script>
 
 <div>
-
-  {#if $user.fields}
-    <div>Welcome, {$user.fields.firstName}</div>
-  {/if}
-
+  <!-- Complaint form -->
   <form on:submit|preventDefault={onSubmit}>
     <input
       type="text"
@@ -55,11 +46,10 @@
       class="my-2 p-2 bg-gray-200 rounded cursor-pointer hover:bg-gray-300"
     >
   </form>
-
-  <div>
+  <!-- Complaints -->
+  <div class="flex flex-col">
     {#each complaints as complaint}
-      <div>{complaint.fields.text}</div>
+      <Complaint value={complaint.fields}></Complaint>
     {/each}
   </div>
-
 </div>

@@ -1,5 +1,6 @@
 
-
-<h1 class="font-bold text-xl py-4">
-  Complaint forum
-</h1>
+<div class="my-4">
+  <a href="/?page=home" class="font-bold text-xl">
+    Complaint forum
+  </a>
+</div>

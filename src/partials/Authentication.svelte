@@ -5,12 +5,13 @@
   import {Users} from '../client';
 
   const signin = writable({email: null, password: null});
-  const signup = writable({name: null, email: null, password: null});
+  const signup = writable({firstName: null, lastName: null, email: null, password: null});
 
   const authenticationPages = ['?page=signin', '?page=signup']
   const modalIsOpen = authenticationPages.includes(window.location.search);
 
   const signOut = () => {
+    // TODO: clear out the session id
     localStorage.clear();
     window.location.search = '?page=signin';
   }
@@ -37,7 +38,28 @@
   }
 
   const signUp = async () => {
-    console.log($signup);
+    // TODO: Require email to be unique
+    let {records: [user]} = await Users({
+      method: 'POST',
+      data: {'records': [
+        {'fields': {
+          'firstName': $signup.firstName,
+          'lastName': $signup.lastName,
+          'email': $signup.email,
+          'password': $signup.password,
+        }}
+      ]}
+    });
+
+    if (!!user) {
+      window.location.search = '?page=home'
+
+      localStorage.setItem('userId', user.id)
+      localStorage.setItem('userData', JSON.stringify(user.fields))
+    } else {
+      // TODO: Show some error message
+      console.log('couldnt create user.');
+    }
   }
 </script>
 
@@ -89,8 +111,14 @@
             <form on:submit|preventDefault={signUp}>
               <input
                 type="text"
-                placeholder="Email"
-                bind:value={$signup.name}
+                placeholder="First name"
+                bind:value={$signup.firstName}
+                class="rounded border border-gray-200 p-2 w-10/12 mt-2 mx-auto"
+              >
+              <input
+                type="text"
+                placeholder="Last name"
+                bind:value={$signup.lastName}
                 class="rounded border border-gray-200 p-2 w-10/12 mt-2 mx-auto"
               >
               <input
@@ -106,7 +134,7 @@
                 class="rounded border border-gray-200 p-2 w-10/12 mt-2 mx-auto"
               >
               <input
-                value="Sign in"
+                value="Sign up"
                 type="submit"
                 class="my-2 p-2 bg-blue-200 rounded cursor-pointer hover:bg-blue-300"
               >
@@ -114,6 +142,7 @@
           </div>
         </div>
       {/if}
+
     </div>
   </div>
 </Modal>

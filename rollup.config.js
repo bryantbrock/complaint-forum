@@ -17,6 +17,7 @@ const aliases = alias({
     { find: 'styles', replacement: 'src/styles' },
     { find: 'util', replacement: 'src/util' },
     { find: 'partials', replacement: 'src/partials' },
+    { find: 'pages', replacement: 'src/pages' },
   ]
 });
 
