@@ -1,3 +1,5 @@
+import {getUrlParams} from './util/misc'
+
 const baseUrl = "https://api.airtable.com/v0/appqX92uDE5P8alZM"
 
 const createFetcher = endpoint => async ({
@@ -6,6 +8,18 @@ const createFetcher = endpoint => async ({
   id = '',
   data = {}
 } = {}) => {
+  const userId = localStorage.getItem('userId')
+  const sessionId = localStorage.getItem('sessionId')
+  const urlParams = getUrlParams()
+  const authenticationPages = ['signin', 'signup']
+
+  if ((!userId || !sessionId) && !authenticationPages.includes(urlParams.page)) {
+    console.error('Signed out. Redirecting.')
+
+    localStorage.clear()
+    window.location.search = '?page=signin'
+  }
+
   const extras = {
     headers: {
       'Authorization': 'Bearer keyzUCHpYPPnsmwWX',
@@ -31,4 +45,5 @@ const createFetcher = endpoint => async ({
 
 export const Complaints = createFetcher('Complaints')
 export const Comments = createFetcher('Comments')
+export const Threads = createFetcher('Threads')
 export const Users = createFetcher('Users')

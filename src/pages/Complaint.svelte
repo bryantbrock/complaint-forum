@@ -1,26 +1,94 @@
 <script>
   import {onMount} from 'svelte';
   import {getUrlParams} from 'util/misc.js';
-  import {Complaints} from '../client.js';
+  import {Complaints, Comments} from '../client.js';
   import Spinner from 'components/Spinner.svelte';
+  import Comment from 'partials/Comment.svelte';
+
+  const statusColors = {
+    Open: 'green',
+    Pending: 'yellow',
+    Closed: 'red'
+  }
 
   let complaint = null;
-  let loading = true;
+  let comments = [];
+  let complaintLoading = true;
+  let commentsLoading = true;
+
+  const getComments = async id => {
+    ({records: comments} = await Comments({params: {
+        'filterByFormula': `complaintId = '${id}'`
+      }}));
+    commentsLoading = false;
+  }
+
+  const toggleCommentSaved = () => {
+    if (!!value.savers) {
+      value.savers = value.savers.includes(currentUserId)
+        ? value.savers.filter(saver => saver !== currentUserId)
+        : [currentUserId, ...value.savers];
+    } else {
+      value.savers = [currentUserId];
+    }
+    saved = !saved;
+
+    const {records: [result]} = Complaints({
+      method: 'PATCH',
+      data: {'records': [{'id': value.id, 'fields': {
+        'savers': value.savers
+      }}]}
+    });
+
+    if (!result) {
+      console.error('Failed to save complaint. Please try again.')
+    }
+  }
 
   onMount(async () => {
     const id = getUrlParams().id;
 
     ({fields: complaint} = await Complaints({id}));
-    loading = false;
+    complaintLoading = false;
+
+    if (complaint.comments?.length) {
+      getComments(id);
+    } else {
+      commentsLoading = false;
+    }
   });
 </script>
 
 <div>
-  {#if loading}
+  {#if complaintLoading}
     <Spinner />
   {:else}
-    <div>{complaint.status}</div>
-    <h1>{complaint.title}</h1>
-    <p>{complaint.body}</p>
+    <div class="pt-4">
+      <div class="mb-12">
+        <span class={`rounded-lg py-1 px-2 bg-${statusColors[complaint.status]}-100`}>{complaint.status}</span>
+        <h1 class="mt-2 text-lg font-bold">{complaint.title}</h1>
+        <p>{complaint.body}</p>
+      </div>
+
+      {#if commentsLoading}
+        <Spinner />
+      {:else if comments.length}
+        <div>
+          <div class="flex items-center text-sm text-gray-600 comments">Comments</div>
+          {#each comments as {fields}}
+            <Comment value={fields} />
+          {/each}
+        </div>
+      {:else}
+        <div class="text-center text-sm text-gray-500">No comments to show.</div>
+      {/if}
+    </div>
   {/if}
 </div>
+
+<style lang="postcss">
+  .comments::after {
+    content: '';
+    @apply flex-grow border-b border-gray-200 ml-2;
+  }
+</style>

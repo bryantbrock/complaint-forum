@@ -5,7 +5,7 @@
   import {sortBy} from '../util/misc';
   import Complaint from '../partials/Complaint.svelte';
 
-  const newComplaint = writable({text: null});
+  const search = writable('');
   let complaints = [];
 
   onMount(() => getComplaints());
@@ -16,34 +16,31 @@
     complaints = sortBy('createdTime', data);
   };
 
-  const onSubmit = async () => {
-    const {records: [complaint]} = await Complaints({
-      method: 'POST',
-      data: {
-        records: [{fields: {
-          body: $newComplaint.text,
-          userId: [`${localStorage.getItem('userId')}`],
-        }}]
+  const searchForComplaints = async () => {
+    ({records: complaints} = await Complaints({
+      params: {
+        'filterByFormula': `OR(
+          SEARCH('${$search}', {title}),
+          SEARCH('${$search}', {body}))
+        `,
       }
-    })
-
-    complaints = [complaint, ...complaints];
+    }));
   }
 </script>
 
 <div>
   <!-- Complaint form -->
-  <form on:submit|preventDefault={onSubmit}>
+  <form on:submit|preventDefault={searchForComplaints} class="flex my-2">
     <input
       type="text"
-      placeholder="What is on your mind?"
-      bind:value={$newComplaint.text}
-      class="rounded-lg border-2 border-gray-200 p-4 w-full"
+      placeholder="Search complaints..."
+      bind:value={$search}
+      class="rounded border border-gray-200 p-2 w-full text-sm"
     >
     <input
-      value="Complain"
+      value="Go"
       type="submit"
-      class="my-2 p-2 bg-gray-200 rounded cursor-pointer hover:bg-gray-300"
+      class="ml-2 px-4 py-1 text-sm bg-gray-200 rounded cursor-pointer hover:bg-gray-300"
     >
   </form>
   <!-- Complaints -->

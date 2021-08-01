@@ -58,3 +58,9 @@ export const getUrlParams = () =>
   Object.fromEntries(
     new URLSearchParams(window.location.search).entries()
   )
+
+export const pluralize = (num, str) =>
+  num === 1 ? `${num} ${str}` : `${num} ${str}s`
+
+export const getUserName = (position, obj) => 
+  obj[`${position}Name (from userId)`];

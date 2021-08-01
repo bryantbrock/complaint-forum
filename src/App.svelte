@@ -3,14 +3,17 @@
   import Tailwind from 'components/Tailwind.svelte';
   import Home from 'pages/Home.svelte';
   import Complaint from 'pages/Complaint.svelte';
+  import User from 'pages/User.svelte';
   import Footer from 'partials/Footer.svelte';
   import Header from 'partials/Header.svelte';
   import Authentication from 'partials/Authentication.svelte';
   import {getUrlParams} from 'util/misc.js';
+  import {Users} from './client';
 
   const pages = [
     {page: 'home', Component: Home},
     {page: 'complaint', Component: Complaint},
+    {page: 'user', Component: User},
   ];
 
   const authenticationPages = ['signin', 'signup'];
@@ -19,19 +22,24 @@
     .concat(authenticationPages)
     .includes(params.page);
 
-  onMount(() => {
+  onMount(async () => {
     const userId = localStorage.getItem('userId');
     const sessionId = localStorage.getItem('sessionId');
-
-    // TODO: check to make sure the session id is valid
+    let {records: [user]} = await Users({
+      params: {
+        'maxRecords': 1,
+        'filterByFormula': `SEARCH('${userId}', {id})`,
+        'filterByFormula': `SEARCH('${sessionId}', {sessionId})`
+      }
+    });
 
     // Redirect to signin by default if signed out
-    if (!userId && !authenticationPages.includes(params.page)) {
+    if (!user && !authenticationPages.includes(params.page)) {
       window.location.search = '?page=signin';
     }
 
     // Redirect from signin/singup if signed in already
-    if (userId && authenticationPages.includes(params.page)) {
+    if (!!user && authenticationPages.includes(params.page)) {
       window.location.search = '?page=home';
     }
   })

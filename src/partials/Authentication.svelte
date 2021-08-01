@@ -3,6 +3,7 @@
   import Heroicons from 'components/Heroicons.svelte';
   import {writable} from 'svelte/store';
   import {Users} from '../client';
+  import {v4 as uuid} from 'uuid';
 
   const signin = writable({email: null, password: null});
   const signup = writable({firstName: null, lastName: null, email: null, password: null});
@@ -27,13 +28,27 @@
     });
 
     if (!!user) {
-      window.location.search = '?page=home'
+      const sessionId = uuid();
+      const data = {
+        'records': [{
+          'id': user.id,
+          'fields': {'sessionId': sessionId},
+        }]
+      };
+      const {records: [success]} = await Users({method: 'PATCH', data});
 
-      localStorage.setItem('userId', user.id)
-      localStorage.setItem('userData', JSON.stringify(user.fields))
+      if (!!success) {
+        localStorage.setItem('userId', user.id);
+        localStorage.setItem('sessionId', sessionId);
+  
+        window.location.search = '?page=home';
+      } else {
+        // TODO: Show some error message
+        console.error('Could not save sessionId. Please login again.')
+      }
     } else {
       // TODO: Show some error message
-      console.log('not logged in.');
+      console.error('Failed to login with provided credentials.');
     }
   }
 
@@ -52,18 +67,32 @@
     });
 
     if (!!user) {
-      window.location.search = '?page=home'
+      const sessionId = uuid();
+      const data = {
+        'records': {
+          'id': user.id,
+          'sessionId': sessionId,
+        }
+      };
+      const {records: [success]} = await Users({method: 'PATCH', data});
 
-      localStorage.setItem('userId', user.id)
-      localStorage.setItem('userData', JSON.stringify(user.fields))
+      if (!!success) {
+        localStorage.setItem('userId', user.id);
+        localStorage.setItem('sessionId', sessionId);
+  
+        window.location.search = '?page=home';
+      } else {
+        // TODO: Show some error message
+        console.error('Could not save sessionId. Check your network connection.')
+      }
     } else {
       // TODO: Show some error message
-      console.log('couldnt create user.');
+      console.error('Failed to create user. Please try again.');
     }
   }
 </script>
 
-<div on:click={signOut} class="absolute top-5 right-10 rounded bg-gray-200 p-2 cursor-pointer">
+<div on:click={signOut} class="absolute top-5 right-12 rounded bg-gray-200 px-2 py-1 text-sm cursor-pointer">
   Sign out
 </div>
 
