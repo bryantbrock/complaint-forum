@@ -7,16 +7,23 @@
 
   const signin = writable({email: null, password: null});
   const signup = writable({firstName: null, lastName: null, email: null, password: null});
-
   const authenticationPages = ['?page=signin', '?page=signup']
   const modalIsOpen = authenticationPages.includes(window.location.search);
 
+  let signinError = false;
+  let signupError = false;
+
   const signIn = async () => {
+    const {email, password} = $signin;
+
+    if (!email || !password) {
+      return signinError = true;
+    }
+
     let {records: [user]} = await Users({
       params: {
         'maxRecords': 1,
-        'filterByFormula': `SEARCH('${$signin.email}', {email})`,
-        'filterByFormula': `SEARCH('${$signin.password}', {password})`,
+        'filterByFormula': `AND(password = '${$signin.password}',email = '${$signin.email}')`,
         'fields%5B%5D': 'email'
       }
     });
@@ -32,6 +39,8 @@
       const {records: [success]} = await Users({method: 'PATCH', data});
 
       if (!!success) {
+        signinError = false;
+
         localStorage.setItem('userId', user.id);
         localStorage.setItem('sessionId', sessionId);
   
@@ -41,26 +50,34 @@
         console.error('Could not save sessionId. Please login again.')
       }
     } else {
-      // TODO: Show some error message
+      signinError = true;
       console.error('Failed to login with provided credentials.');
     }
   }
 
   const signUp = async () => {
+    const {firstName, lastName, email, password} = $signup;
+
+    if (!firstName || !lastName || !email || !password) {
+      return signupError = true;
+    }
+
     // TODO: Require email to be unique
     let {records: [user]} = await Users({
       method: 'POST',
       data: {'records': [
         {'fields': {
-          'firstName': $signup.firstName,
-          'lastName': $signup.lastName,
-          'email': $signup.email,
-          'password': $signup.password,
+          'firstName': firstName,
+          'lastName': lastName,
+          'email': email,
+          'password': password,
         }}
       ]}
     });
 
     if (!!user) {
+      signupError = false;
+
       const sessionId = uuid();
       const data = {
         'records': {
@@ -68,9 +85,9 @@
           'sessionId': sessionId,
         }
       };
-      const {records: [success]} = await Users({method: 'PATCH', data});
+      const {records: success} = await Users({method: 'PATCH', data});
 
-      if (!!success) {
+      if (!!success?.length) {
         localStorage.setItem('userId', user.id);
         localStorage.setItem('sessionId', sessionId);
   
@@ -88,76 +105,93 @@
 
 <Modal isOpen={modalIsOpen}>
   <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-    <div class="sm:flex sm:items-start">
-      <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-        <Heroicons icon="lock" />
-      </div>
+    <div class="">
 
       {#if window.location.search === '?page=signin'}
         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-          <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title mt-4">
+          <div class="text-center mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+            <Heroicons icon="lock" size ={6} />
+          </div>
+          <h3 class="text-center text-lg leading-6 font-medium text-gray-900 mt-4" id="modal-title">
             Sign back in.
           </h3>
           <div class="mt-2">
-            <form on:submit|preventDefault={signIn}>
+            {#if signinError}
+              <div class="rounded my-1 px-2 py-3 bg-red-100 text-red-500 text-sm">Unable to login with provided credentials.</div>
+            {/if}
+            <form on:submit|preventDefault={signIn} class="flex flex-col w-full">
               <input
-                type="text"
+                type="email"
                 placeholder="Email"
                 bind:value={$signin.email}
-                class="rounded border border-gray-200 p-2 w-10/12 mt-2 mx-auto"
+                class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
               >
               <input
                 type="password"
                 placeholder="Password"
                 bind:value={$signin.password}
-                class="rounded border border-gray-200 p-2 w-10/12 mt-2 mx-auto"
+                class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
               >
               <input
                 value="Sign in"
                 type="submit"
-                class="my-2 p-2 bg-blue-200 rounded cursor-pointer hover:bg-blue-300"
+                class="my-2 p-2 bg-blue-700  text-white rounded cursor-pointer hover:bg-blue-600"
               >
             </form>
+            <hr class="my-4 text-gray-500" >
+            <div class="flex flex-col text-center">
+              <span>Don't have an account? <a href="/?page=signup" class="text-blue-300 hover:text-blue-500 pt-1">Sign up.</a></span>
+            </div>
           </div>
         </div>
 
       {:else if window.location.search === '?page=signup'}
         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-          <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title mt-4">
+          <div class="text-center mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+            <Heroicons icon="lock" size ={6} />
+          </div>
+          <h3 class="text-center text-lg leading-6 font-medium text-gray-900 mt-4" id="modal-title">
             Get started.
           </h3>
           <div class="mt-2">
-            <form on:submit|preventDefault={signUp}>
+            {#if signupError}
+              <div class="rounded my-1 px-2 py-3 bg-red-100 text-red-500 text-sm">Please fill in all required fields.</div>
+            {/if}
+            <form on:submit|preventDefault={signUp} class="flex flex-col w-full">
               <input
                 type="text"
                 placeholder="First name"
                 bind:value={$signup.firstName}
-                class="rounded border border-gray-200 p-2 w-10/12 mt-2 mx-auto"
+                class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
               >
               <input
                 type="text"
                 placeholder="Last name"
                 bind:value={$signup.lastName}
-                class="rounded border border-gray-200 p-2 w-10/12 mt-2 mx-auto"
+                class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
               >
               <input
-                type="text"
-                placeholder="Email"
+                type="email"
+                placeholder="email"
                 bind:value={$signup.email}
-                class="rounded border border-gray-200 p-2 w-10/12 mt-2 mx-auto"
+                class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
               >
               <input
                 type="password"
                 placeholder="Password"
                 bind:value={$signup.password}
-                class="rounded border border-gray-200 p-2 w-10/12 mt-2 mx-auto"
+                class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
               >
               <input
                 value="Sign up"
                 type="submit"
-                class="my-2 p-2 bg-blue-200 rounded cursor-pointer hover:bg-blue-300"
+                class="my-2 p-2 bg-blue-700  text-white rounded cursor-pointer hover:bg-blue-600"
               >
             </form>
+            <hr class="my-4 text-gray-500" >
+            <div class="flex flex-col text-center">
+              <span>Already have an account? <a href="/?page=signin" class="text-blue-300 hover:text-blue-500 pt-1">Sign in.</a></span>
+            </div>
           </div>
         </div>
       {/if}
@@ -165,3 +199,9 @@
     </div>
   </div>
 </Modal>
+
+<style lang="postcss">
+  input:not([type=submit]):focus {
+    @apply outline-none border border-blue-400;
+  }
+</style>
