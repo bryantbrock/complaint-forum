@@ -5,6 +5,7 @@
   import {getUserName, sortBy} from '../util/misc.js';
 
   export let value;
+  export let remove;
   
   const currentUserId = localStorage.getItem('userId');
 
@@ -132,6 +133,17 @@
           <span class="mt-1 ml-1">{value.threads?.length || 0}</span>
         </a>
       </div>
+      {#if commentUserId === currentUserId}
+        <div class="text-gray-400 ml-6 hover:text-gray-500">
+          <a
+            href={'/' + window.location.search}
+            on:click|preventDefault={() => remove(value.id)}
+            class="flex items-center mr-1"
+            >
+            <Heroicons icon="trash" size={4} />
+          </a>
+        </div>
+      {/if}
     </div>
   </div>
 </div>

@@ -1,10 +1,13 @@
 <script>
   import {onMount} from 'svelte';
+  import {writable} from 'svelte/store';
   import {getUrlParams, sortBy} from 'util/misc.js';
   import {Complaints, Comments} from '../client.js';
   import Spinner from 'components/Spinner.svelte';
   import Comment from 'partials/Comment.svelte';
 
+  const newComment = writable({text: null})
+  const comments = writable([]);
   const statusColors = {
     Open: 'bg-green-100',
     Pending: 'bg-yellow-100',
@@ -12,15 +15,53 @@
   }
 
   let complaint = null;
-  let comments = [];
   let complaintLoading = true;
   let commentsLoading = true;
+  let commentSaveLoading = false;
+
+  const removeComment = async commentId => {
+    const {deleted} = await Comments({
+      method: 'DELETE',
+      id: commentId
+    });
+
+    if (deleted) {
+      console.log($comments)
+      console.log($comments.filter(({id}) => id !== commentId))
+      $comments = $comments.filter(({id}) => id !== commentId)
+    } else {
+      console.error('Failed to delete comment. Please try again.');
+    }
+  }
+
+  const saveComment = async () => {
+    commentSaveLoading = true;
+    const {records: success} = await Comments({
+      method: 'POST',
+      data: {'records': [
+        {'fields': {
+          'text': $newComment.text,
+          'complaintId': [getUrlParams().id],
+          'userId': [localStorage.getItem('userId')]
+        }}
+      ]}
+    });
+
+    if (!!success) {
+      commentSaveLoading = false;
+      $newComment.text = '';
+      $comments = [...$comments, success[0]]
+    } else {
+      commentSaveLoading = false;
+      console.error('Comment failed to save. Please try again.')
+    }
+  }
 
   const getComments = async id => {
     const {records: res} = await Comments({params: {
       'filterByFormula': `complaintId = '${id}'`
     }});
-    comments = sortBy('createdTime', res, 'desc');
+    $comments = sortBy('createdTime', res, 'desc');
     commentsLoading = false;
   }
 
@@ -49,17 +90,36 @@
         <p>{complaint.body}</p>
       </div>
 
+      <div class="flex items-center mb-2 text-sm text-gray-600 comments">Comments</div>
+      <div class="rounded border border-gray-200 p-2">
+        <form on:submit|preventDefault={saveComment}>
+          <input
+            type="text"
+            placeholder="New comment..."
+            bind:value={$newComment.text}
+            class="rounded p-2 w-full text-sm focus:outline-none mb-2"
+          >
+          {#if commentSaveLoading}
+            <div class="my-2"><Spinner /></div>
+          {:else}
+            <input
+              type="submit"
+              value="Comment"
+              class="rounded bg-blue-500 text-white px-2 py-1 text-sm cursor-pointer hover:bg-blue-600 transition"
+            >
+          {/if}
+        </form>
+      </div>
       {#if commentsLoading}
         <Spinner />
-      {:else if comments.length}
+      {:else if $comments.length}
         <div>
-          <div class="flex items-center text-sm text-gray-600 comments">Comments</div>
-          {#each comments as {fields}}
-            <Comment value={fields} />
+          {#each $comments as {fields}}
+            <Comment value={fields} remove={removeComment} />
           {/each}
         </div>
       {:else}
-        <div class="text-center text-sm text-gray-500">No comments to show.</div>
+        <div class="mt-4 text-center text-sm text-gray-500">No comments to show.</div>
       {/if}
     </div>
   {/if}
