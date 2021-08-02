@@ -124,9 +124,9 @@
 
       {#if window.location.search === '?page=signin'}
         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-          <div class="text-center mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+          <!-- <div class="text-center mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
             <Heroicons icon="lock" size ={6} />
-          </div>
+          </div> -->
           <h3 class="text-center text-lg leading-6 font-medium text-gray-900 mt-4" id="modal-title">
             Sign back in.
           </h3>
@@ -166,9 +166,9 @@
 
       {:else if window.location.search === '?page=signup'}
         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-          <div class="text-center mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+          <!-- <div class="text-center mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
             <Heroicons icon="lock" size ={6} />
-          </div>
+          </div> -->
           <h3 class="text-center text-lg leading-6 font-medium text-gray-900 mt-4" id="modal-title">
             Get started.
           </h3>
