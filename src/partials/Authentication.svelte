@@ -11,12 +11,6 @@
   const authenticationPages = ['?page=signin', '?page=signup']
   const modalIsOpen = authenticationPages.includes(window.location.search);
 
-  const signOut = () => {
-    // TODO: clear out the session id
-    localStorage.clear();
-    window.location.search = '?page=signin';
-  }
-
   const signIn = async () => {
     let {records: [user]} = await Users({
       params: {
@@ -91,10 +85,6 @@
     }
   }
 </script>
-
-<div on:click={signOut} class="absolute top-5 right-12 rounded bg-gray-200 px-2 py-1 text-sm cursor-pointer">
-  Sign out
-</div>
 
 <Modal isOpen={modalIsOpen}>
   <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">

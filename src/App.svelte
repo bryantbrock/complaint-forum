@@ -22,6 +22,10 @@
     .concat(authenticationPages)
     .includes(params.page);
 
+  if (!pageExists) {
+    window.location.search = '?page=home'
+  }
+
   onMount(async () => {
     const userId = localStorage.getItem('userId');
     const sessionId = localStorage.getItem('sessionId');
@@ -54,10 +58,6 @@
         <Component />
       {/if}
     {/each}
-
-    {#if !pageExists}
-      <div>Not Found</div>
-    {/if}
   <Footer />
 
   <!-- Signin & Signup modals -->

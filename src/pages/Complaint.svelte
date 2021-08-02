@@ -23,28 +23,6 @@
     commentsLoading = false;
   }
 
-  const toggleCommentSaved = () => {
-    if (!!value.savers) {
-      value.savers = value.savers.includes(currentUserId)
-        ? value.savers.filter(saver => saver !== currentUserId)
-        : [currentUserId, ...value.savers];
-    } else {
-      value.savers = [currentUserId];
-    }
-    saved = !saved;
-
-    const {records: [result]} = Complaints({
-      method: 'PATCH',
-      data: {'records': [{'id': value.id, 'fields': {
-        'savers': value.savers
-      }}]}
-    });
-
-    if (!result) {
-      console.error('Failed to save complaint. Please try again.')
-    }
-  }
-
   onMount(async () => {
     const id = getUrlParams().id;
 
