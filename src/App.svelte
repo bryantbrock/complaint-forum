@@ -14,6 +14,8 @@
     {page: 'home', Component: Home},
     {page: 'complaint', Component: Complaint},
     {page: 'user', Component: User},
+    {page: 'signin', Component: Authentication},
+    {page: 'signup', Component: Authentication},
   ];
 
   const authenticationPages = ['signin', 'signup'];
@@ -51,15 +53,14 @@
 
 <Tailwind />
 
-<div class="px-12 max-w-screen-lg mx-auto">
-  <Header />
-    {#each pages as {page, Component}}
-      {#if page === params.page}
-        <Component />
-      {/if}
-    {/each}
-  <Footer />
-
-  <!-- Signin & Signup modals -->
-  <Authentication />
+<div class="bg-gray-50 h-screen">
+  <div class="px-12 max-w-screen-lg mx-auto">
+    <Header />
+      {#each pages as {page, Component}}
+        {#if page === params.page}
+          <Component />
+        {/if}
+      {/each}
+    <Footer />
+  </div>
 </div>

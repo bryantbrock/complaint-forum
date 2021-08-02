@@ -91,7 +91,7 @@
       </div>
 
       <div class="flex items-center mb-2 text-sm text-gray-600 comments">Comments</div>
-      <div class="rounded border border-gray-200 p-2">
+      <div class="rounded border border-gray-200 p-2 bg-white">
         <form on:submit|preventDefault={saveComment}>
           <input
             type="text"

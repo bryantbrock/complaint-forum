@@ -78,7 +78,7 @@
   }
 </script>
 
-<div class="rounded shadow p-2 mt-2">
+<div class="rounded shadow p-2 mt-2 bg-white">
   <div class="flex flex-col flex-grow mx-2">
     <div class="flex">
       <div class="flex items-center mr-1 text-gray-400"><Heroicons icon="user-circle" /></div>

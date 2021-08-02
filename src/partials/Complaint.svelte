@@ -40,7 +40,7 @@
   }
 </script>
 
-<a href={`/?page=complaint&id=${value.id}`} class="rounded shadow p-4 mt-2 hover:bg-gray-50">
+<a href={`/?page=complaint&id=${value.id}`} class="rounded shadow p-4 mt-2 hover:shadow-lg bg-white transition">
   <div class="flex flex-col pl-2 flex-grow">
     <span class="font-semibold">{value.title}</span>
     <span class="text-sm">{value.body}</span>

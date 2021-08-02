@@ -1,5 +1,8 @@
 <script>
   import Heroicons from "../components/Heroicons.svelte";
+  import { getUrlParams } from "../util/misc";
+
+  const authPages = ['signin', 'signup'];
 
   const signOut = () => {
     // TODO: clear out the session id
@@ -8,8 +11,8 @@
   }
 </script>
 
-<div class="my-4 flex justify-between">
-  {#if !!document.referrer}
+<div class="py-4 flex justify-between">
+  {#if !!document.referrer && !authPages.includes(getUrlParams().page)}
     <div class="flex">
       <a 
         on:click|preventDefault={() => window.history.back()}
@@ -34,10 +37,12 @@
       Complaint Forum
     </a>
   </div>
-  <div>
-    <div on:click={signOut} class="rounded bg-red-100 px-2 py-1 text-sm text-red-500 cursor-pointer">
-      Sign out
+  {#if !authPages.includes(getUrlParams().page)}
+    <div>
+      <div on:click={signOut} class="rounded bg-red-100 px-2 py-1 text-sm text-red-500 cursor-pointer">
+        Sign out
+      </div>
+      <div class="flex-grow" />
     </div>
-    <div class="flex-grow" />
-  </div>
+  {/if}
 </div>

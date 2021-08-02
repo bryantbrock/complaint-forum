@@ -8,8 +8,6 @@
 
   const signin = writable({email: null, password: null});
   const signup = writable({firstName: null, lastName: null, email: null, password: null});
-  const authenticationPages = ['?page=signin', '?page=signup']
-  const modalIsOpen = authenticationPages.includes(window.location.search);
 
   let signinError = false;
   let signupError = false;
@@ -118,8 +116,8 @@
   }
 </script>
 
-<Modal isOpen={modalIsOpen}>
-  <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+<!-- <Modal isOpen={modalIsOpen}> -->
+  <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 rounded shadow">
     <div class="">
 
       {#if window.location.search === '?page=signin'}
@@ -221,7 +219,7 @@
 
     </div>
   </div>
-</Modal>
+<!-- </Modal> -->
 
 <style lang="postcss">
   input:not([type=submit]):focus {
