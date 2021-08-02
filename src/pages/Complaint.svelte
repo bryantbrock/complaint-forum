@@ -1,6 +1,6 @@
 <script>
   import {onMount} from 'svelte';
-  import {getUrlParams} from 'util/misc.js';
+  import {getUrlParams, sortBy} from 'util/misc.js';
   import {Complaints, Comments} from '../client.js';
   import Spinner from 'components/Spinner.svelte';
   import Comment from 'partials/Comment.svelte';
@@ -17,9 +17,10 @@
   let commentsLoading = true;
 
   const getComments = async id => {
-    ({records: comments} = await Comments({params: {
-        'filterByFormula': `complaintId = '${id}'`
-      }}));
+    const {records: res} = await Comments({params: {
+      'filterByFormula': `complaintId = '${id}'`
+    }});
+    comments = sortBy('createdTime', res, 'desc');
     commentsLoading = false;
   }
 

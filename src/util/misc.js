@@ -48,7 +48,9 @@ export const toPctChange = arr =>
 
 export const sortBy = (value, arr, direction = 'asc') =>
   arr.sort((a, b) => 
-    a[value] > b[value] ? -1 : 1
+    direction === 'desc'
+      ? a[value] > b[value] ? 1 : -1
+      : a[value] > b[value] ? -1 : 1
   )
 
 export const toSlug = str =>

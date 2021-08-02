@@ -1,7 +1,7 @@
 <script>
   import Heroicons from 'components/Heroicons.svelte';
   import {Comments, Threads} from '../client';
-  import {getUserName} from '../util/misc.js';
+  import {getUserName, sortBy} from '../util/misc.js';
 
   export let value;
   
@@ -52,9 +52,11 @@
 
     const commentId = value.id;
 
-    ({records: threads} = await Threads({params: {
+    const {records: res} = await Threads({params: {
       'filterByFormula': `commentId = '${commentId}'`
-    }}));
+    }});
+    threads = sortBy('createdTime', res, 'desc')
+
 
     if (!!threads) {
       showCommentThreads = true;

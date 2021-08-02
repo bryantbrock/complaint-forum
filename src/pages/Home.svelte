@@ -14,6 +14,10 @@
   onMount(() => getComplaints());
 
   const getComplaints = async () => {
+    if (complaints.length > 0) {
+      return;
+    }
+  
     let {records: data} = await Complaints();
 
     complaints = sortBy('createdTime', data);
