@@ -1,5 +1,6 @@
 <script>
   import Heroicons from 'components/Heroicons.svelte';
+  import Spinner from 'components/Spinner.svelte';
   import {Comments, Threads} from '../client';
   import {getUserName, sortBy} from '../util/misc.js';
 
@@ -9,6 +10,7 @@
 
   let liked = !!value.likes?.includes(currentUserId);
   let showCommentThreads = false;
+  let threadsLoading = false;
   let threads = [];
 
   const [commentUserId] = value.userId;
@@ -42,6 +44,10 @@
   }
 
   const toggleThreads = async () => {
+    if (!value.threads) {
+      return;
+    }
+
     if (showCommentThreads) {
       return showCommentThreads = false;
     }
@@ -49,6 +55,9 @@
     if (threads.length) {
       return showCommentThreads = true;
     }
+
+    threadsLoading = true;
+    showCommentThreads = true;
 
     const commentId = value.id;
 
@@ -59,8 +68,10 @@
 
 
     if (!!threads) {
-      showCommentThreads = true;
+      threadsLoading = false;
     } else {
+      threadsLoading = false;
+      showCommentThreads = false;
       console.error('Failed to fetch comment threads.')
     }
   }
@@ -78,7 +89,7 @@
       </a>
     </div>
     <span class="text-sm py-1">{value.text}</span>
-    {#if showCommentThreads}
+    {#if showCommentThreads && !threadsLoading}
       <div class="flex flex-col border-l border-gray-200 pl-10 mt-2 mb-3">
         <a
           href={'/' + window.location.search}
@@ -97,6 +108,8 @@
           <div class="text-xs text-gray-700">{thread.text}</div>
         {/each}
       </div>
+    {:else if showCommentThreads && threadsLoading}
+      <div class="my-4"><Spinner /></div>
     {/if}
     <div class="flex">
       <div class="flex text-center text-xs text-gray-400">
