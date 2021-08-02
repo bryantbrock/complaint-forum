@@ -29,9 +29,9 @@
     ({records: complaints} = await Complaints({
       params: {
         'filterByFormula': `OR(
-          SEARCH('${value}', {title}),
-          SEARCH('${value}', {body}))
-        `,
+          SEARCH('${value}', LOWER(title)),
+          SEARCH('${value}', LOWER(body))
+        )`,
       }
     }));
     loading = false;
