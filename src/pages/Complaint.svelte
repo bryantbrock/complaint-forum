@@ -6,9 +6,9 @@
   import Comment from 'partials/Comment.svelte';
 
   const statusColors = {
-    Open: 'green',
-    Pending: 'yellow',
-    Closed: 'red'
+    Open: 'bg-green-100',
+    Pending: 'bg-yellow-100',
+    Closed: 'bg-red-100'
   }
 
   let complaint = null;
@@ -43,7 +43,7 @@
   {:else}
     <div class="pt-4">
       <div class="mb-12">
-        <span class={`rounded-lg py-1 px-2 bg-${statusColors[complaint.status]}-100`}>{complaint.status}</span>
+        <span class={`rounded-lg py-1 px-2 ${statusColors[complaint.status]}`}>{complaint.status}</span>
         <h1 class="mt-2 text-lg font-bold">{complaint.title}</h1>
         <p>{complaint.body}</p>
       </div>

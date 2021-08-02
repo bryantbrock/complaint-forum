@@ -2,6 +2,7 @@
   import Modal from 'components/Modal.svelte';
   import Heroicons from 'components/Heroicons.svelte';
   import {writable} from 'svelte/store';
+  import Spinner from 'components/Spinner.svelte';
   import {Users} from '../client';
   import {v4 as uuid} from 'uuid';
 
@@ -12,12 +13,17 @@
 
   let signinError = false;
   let signupError = false;
+  let signinLoading = false;
+  let signupLoading = false;
 
   const signIn = async () => {
+    signinLoading = true
     const {email, password} = $signin;
 
     if (!email || !password) {
-      return signinError = true;
+      signinError = true;
+      signinLoading = false;
+      return;
     }
 
     let {records: [user]} = await Users({
@@ -40,26 +46,32 @@
 
       if (!!success) {
         signinError = false;
+        signinLoading = false;
 
         localStorage.setItem('userId', user.id);
         localStorage.setItem('sessionId', sessionId);
   
         window.location.search = '?page=home';
       } else {
+        signinLoading = false;
         // TODO: Show some error message
         console.error('Could not save sessionId. Please login again.')
       }
     } else {
+      signinLoading = false;
       signinError = true;
       console.error('Failed to login with provided credentials.');
     }
   }
 
   const signUp = async () => {
+    signupLoading = true;
     const {firstName, lastName, email, password} = $signup;
 
     if (!firstName || !lastName || !email || !password) {
-      return signupError = true;
+      signupLoading = false;
+      signupError = true;
+      return;
     }
 
     // TODO: Require email to be unique
@@ -80,23 +92,26 @@
 
       const sessionId = uuid();
       const data = {
-        'records': {
+        'records': [{
           'id': user.id,
-          'sessionId': sessionId,
-        }
+          'fields': {'sessionId': sessionId},
+        }]
       };
       const {records: success} = await Users({method: 'PATCH', data});
 
       if (!!success?.length) {
+        signupLoading = false;
         localStorage.setItem('userId', user.id);
         localStorage.setItem('sessionId', sessionId);
   
         window.location.search = '?page=home';
       } else {
+        signupLoading = false;
         // TODO: Show some error message
         console.error('Could not save sessionId. Check your network connection.')
       }
     } else {
+      signupLoading = false;
       // TODO: Show some error message
       console.error('Failed to create user. Please try again.');
     }
@@ -132,11 +147,15 @@
                 bind:value={$signin.password}
                 class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
               >
-              <input
-                value="Sign in"
-                type="submit"
-                class="my-2 p-2 bg-blue-700  text-white rounded cursor-pointer hover:bg-blue-600"
-              >
+              {#if signinLoading}
+                <div class="my-4"><Spinner /></div>
+              {:else}
+                <input
+                  value="Sign in"
+                  type="submit"
+                  class="my-2 p-2 bg-blue-700  text-white rounded cursor-pointer hover:bg-blue-600"
+                >
+              {/if}
             </form>
             <hr class="my-4 text-gray-500" >
             <div class="flex flex-col text-center">
@@ -182,11 +201,15 @@
                 bind:value={$signup.password}
                 class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
               >
-              <input
-                value="Sign up"
-                type="submit"
-                class="my-2 p-2 bg-blue-700  text-white rounded cursor-pointer hover:bg-blue-600"
-              >
+              {#if signinLoading}
+                <div class="my-4"><Spinner /></div>
+              {:else}
+                <input
+                  value="Sign up"
+                  type="submit"
+                  class="my-2 p-2 bg-blue-700  text-white rounded cursor-pointer hover:bg-blue-600"
+                >
+              {/if}
             </form>
             <hr class="my-4 text-gray-500" >
             <div class="flex flex-col text-center">
