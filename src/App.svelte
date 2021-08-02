@@ -54,7 +54,7 @@
 <Tailwind />
 
 <div class="bg-gray-50 h-screen">
-  <div class="px-12 max-w-screen-lg mx-auto">
+  <div class="px-12 max-w-screen-md mx-auto">
     <Header />
       {#each pages as {page, Component}}
         {#if page === params.page}

@@ -117,7 +117,7 @@
 </script>
 
 <!-- <Modal isOpen={modalIsOpen}> -->
-  <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 rounded shadow">
+  <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 rounded shadow max-w-md mx-auto">
     <div class="">
 
       {#if window.location.search === '?page=signin'}

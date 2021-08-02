@@ -3,6 +3,7 @@
   import { getUrlParams } from "../util/misc";
 
   const authPages = ['signin', 'signup'];
+  const loggedIn = !authPages.includes(getUrlParams().page);
 
   const signOut = () => {
     // TODO: clear out the session id
@@ -11,8 +12,8 @@
   }
 </script>
 
-<div class="py-4 flex justify-between">
-  {#if !!document.referrer && !authPages.includes(getUrlParams().page)}
+<div class={`py-4 flex ${loggedIn ? 'justify-between' : 'justify-center'}`}>
+  {#if !!document.referrer && loggedIn}
     <div class="flex">
       <a 
         on:click|preventDefault={() => window.history.back()}
@@ -37,7 +38,7 @@
       Complaint Forum
     </a>
   </div>
-  {#if !authPages.includes(getUrlParams().page)}
+  {#if loggedIn}
     <div>
       <div on:click={signOut} class="rounded bg-red-100 px-2 py-1 text-sm text-red-500 cursor-pointer">
         Sign out
