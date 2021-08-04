@@ -71,11 +71,11 @@ import Modal from '../components/Modal.svelte';
           </a>
           <span>{value.savers?.length || 0}</span>
         </div>
-        <div class="text-xs text-gray-400 flex mt-2 ml-5">
+        <div class="text-xs text-gray-400 flex p-2 ml-5">
           <div class="flex items-center mr-1"><Heroicons icon="chat-alt" size={4} /></div>
           <span>{value.comments?.length || 0}</span>
         </div>
-        <div class="text-xs text-gray-400 flex mt-2 ml-5">
+        <div class="text-xs text-gray-400 flex p-2 ml-5">
           <div class="flex items-center mr-1"><Heroicons icon="user" size={4} /></div>
           <a
             href={`?page=user&id=${complaintUserId}`}
@@ -87,8 +87,8 @@ import Modal from '../components/Modal.svelte';
         </div>
       </div>
       {#if currentUserId === complaintUserId}
-        <div class="text-xs text-gray-400 flex mt-2 ml-5 hover:text-gray-700" on:click|preventDefault={() => confirmDelete = true}>
-          <div class="flex items-center mr-1"><Heroicons icon="trash" size={4} /></div>
+        <div class="text-xs text-gray-400 flex rounded-full p-2 hover:bg-gray-100" on:click|preventDefault={() => confirmDelete = true}>
+          <Heroicons icon="trash" size={4} />
         </div>
       {/if}
     </div>
@@ -97,6 +97,11 @@ import Modal from '../components/Modal.svelte';
 
 <Modal isOpen={confirmDelete}>
   <div class="p-8">
+    <div class="absolute right-7 top-7 p-1 rounded cursor-pointer hover:bg-gray-100" on:click={() => confirmDelete = false}>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </div>
     <p>Are you sure you want to delete this complaint?</p>
     <form on:submit={deleteComplaint}>
       <input
