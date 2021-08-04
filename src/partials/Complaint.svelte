@@ -63,11 +63,7 @@ import Modal from '../components/Modal.svelte';
             on:click|preventDefault|stopPropagation={toggleComplaintSaved}
             class="mr-1"
           >
-          {#if saved}
-            <Heroicons icon="heart" classes="fill-on-hover" fill={true} size={4} />
-          {:else}
-            <Heroicons icon="heart" classes="fill-on-hover" size={4} />
-          {/if}
+            <Heroicons icon="heart" classes="fill-on-hover" fill={saved} size={4} />
           </a>
           <span>{value.savers?.length || 0}</span>
         </div>

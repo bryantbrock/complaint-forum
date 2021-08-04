@@ -30,16 +30,16 @@
 
   const searchForComplaints = async value => {
     loading = true;
-    ({records: values} = await Complaints({
+    const {records: values} = await Complaints({
       params: {
         'filterByFormula': `OR(
           SEARCH('${value}', LOWER(title)),
           SEARCH('${value}', LOWER(body))
         )`,
       }
-    }));
+    });
 
-    $complaints.set(values);
+    $complaints = values;
     loading = false;
   }
 

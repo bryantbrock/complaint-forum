@@ -34,9 +34,7 @@ const createFetcher = table => async ({
   }
 
   if (!!params) {
-    params = Object.keys(params).map(function(key) {
-      return key + '=' + params[key];
-    }).join('&');
+    params = Object.keys(params).map(key => key + '=' + params[key]).join('&');
   }
 
   const res = await fetch(baseUrl + `/${table}${id ? '/' + id : ''}?` + params, extras)
