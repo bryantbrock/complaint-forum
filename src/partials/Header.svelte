@@ -2,7 +2,6 @@
   import { writable } from "svelte/store";
   import Modal from "components/Modal.svelte";
   import Spinner from "components/Spinner.svelte";
-  import Heroicons from "components/Heroicons.svelte";
   import { getUrlParams } from "util/misc.js";
   import { complaints, Complaints } from '../client.js';
 
@@ -102,7 +101,9 @@
 <Modal isOpen={complaining}>
   <div class="p-8">
     <div class="absolute right-7 top-7 p-1 rounded cursor-pointer hover:bg-gray-100" on:click={() => complaining = false}>
-      <Heroicons icon="x" size={6} />
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
     </div>
     <form on:submit|preventDefault={createComplaint}>
       <h1 class="font-bold text-xl mb-4 text-gray-700">New Complaint</h1>
