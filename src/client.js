@@ -1,3 +1,4 @@
+import {writable} from 'svelte/store'
 import {getUrlParams} from './util/misc'
 
 const baseUrl = "https://api.airtable.com/v0/appqX92uDE5P8alZM"
@@ -47,3 +48,5 @@ export const Complaints = createFetcher('Complaints')
 export const Comments = createFetcher('Comments')
 export const Threads = createFetcher('Threads')
 export const Users = createFetcher('Users')
+
+export const complaints = writable([])

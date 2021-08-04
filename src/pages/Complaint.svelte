@@ -9,9 +9,9 @@
   const newComment = writable({text: null})
   const comments = writable([]);
   const statusColors = {
-    Open: 'bg-green-100',
-    Pending: 'bg-yellow-100',
-    Closed: 'bg-red-100'
+    Open: 'bg-green-50 text-green-600 border border-green-400',
+    Pending: 'bg-yellow-50 text-yellow-600 border border-yellow-400',
+    Closed: 'bg-red-50 text-red-600 border border-red-400'
   }
 
   let complaint = null;

@@ -120,14 +120,19 @@
   <div class="flex flex-col flex-grow mx-2">
 
     <!-- Comment user -->
-    <div class="flex">
-      <div class="flex items-center mr-1 text-gray-400"><Heroicons icon="user" size={4} /></div>
-      <a
-        href={`?page=user&id=${commentUserId}`}
-        class="text-blue-500 hover:text-blue-600 text-sm"
-      >
-        {commentFirstName} {commentLastName}
-      </a>
+    <div class="flex justify-between">
+      <div class="flex">
+        <div class="flex items-center mr-1 text-gray-400"><Heroicons icon="user" size={4} /></div>
+        <a
+          href={`?page=user&id=${commentUserId}`}
+          class="text-blue-500 hover:text-blue-600 text-sm"
+        >
+          {commentFirstName} {commentLastName}
+        </a>
+      </div>
+      <div class="text-xs text-gray-400">
+        <p>{new Date(value.created).toDateString()}</p>
+      </div>
     </div>
 
     <!-- Body of comment -->
@@ -147,7 +152,7 @@
           <div class="flex">
             <a
               href={`?page=user&id=${thread.userId}`}
-              class="text-blue-500 hover:text-blue-600 text-sm mt-2"
+              class="text-blue-500 hover:text-blue-600 text-xs mt-2"
             >
               {getUserName('first', thread)} {getUserName('last', thread)}
             </a>
@@ -158,14 +163,14 @@
                   on:click|preventDefault={() => removeThread(thread.id)}
                   class="flex items-end mr-1"
                   >
-                  <Heroicons icon="trash" size={4} />
+                  <Heroicons icon="x" size={4} />
                 </a>
               </div>
             {/if}
           </div>
           <div class="text-sm text-gray-700">{thread.text}</div>
         {/each}
-        <div class="rounded border border-gray-200 p-1 mt-2 bg-white">
+        <div class="rounded border border-gray-200 p-1 mt-4 bg-white">
           <form on:submit|preventDefault={saveThread}>
             <input
               type="text"
@@ -212,7 +217,7 @@
           class="flex items-center mr-1"
           >
           <Heroicons icon="chat-alt-2" size={4} />
-          <span class="mt-1 ml-1">{value.threads?.length || 0}</span>
+          <span class="mt-1 ml-1">{threads.length || value.threads?.length || 0}</span>
         </a>
       </div>
       {#if commentUserId === currentUserId}
