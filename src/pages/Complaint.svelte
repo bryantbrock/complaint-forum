@@ -19,22 +19,20 @@
   let commentsLoading = true;
   let commentSaveLoading = false;
 
-  const removeComment = async commentId => {
-    const {deleted} = await Comments({
+  const removeComment = commentId => {
+    Comments({
       method: 'DELETE',
       id: commentId
     });
 
-    if (deleted) {
-      console.log($comments)
-      console.log($comments.filter(({id}) => id !== commentId))
-      $comments = $comments.filter(({id}) => id !== commentId)
-    } else {
-      console.error('Failed to delete comment. Please try again.');
-    }
+    $comments = $comments.filter(({id}) => id !== commentId)
   }
 
   const saveComment = async () => {
+    if (!$newComment.text) {
+      return;
+    }
+
     commentSaveLoading = true;
     const {records: success} = await Comments({
       method: 'POST',
@@ -91,7 +89,7 @@
       </div>
 
       <div class="flex items-center mb-2 text-sm text-gray-600 comments">Comments</div>
-      <div class="rounded border border-gray-200 p-2 bg-white">
+      <div class="rounded border border-gray-200 p-2 bg-white mb-4">
         <form on:submit|preventDefault={saveComment}>
           <input
             type="text"
@@ -105,7 +103,7 @@
             <input
               type="submit"
               value="Comment"
-              class="rounded bg-blue-500 text-white px-2 py-1 text-sm cursor-pointer hover:bg-blue-600 transition"
+              class="rounded bg-blue-500 text-white px-2 py-1 text-sm cursor-pointer hover:bg-blue-600 transition ml-2 mb-2"
             >
           {/if}
         </form>

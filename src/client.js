@@ -2,7 +2,7 @@ import {getUrlParams} from './util/misc'
 
 const baseUrl = "https://api.airtable.com/v0/appqX92uDE5P8alZM"
 
-const createFetcher = endpoint => async ({
+const createFetcher = table => async ({
   method = 'GET',
   params = '',
   id = '',
@@ -38,7 +38,7 @@ const createFetcher = endpoint => async ({
     }).join('&');
   }
 
-  const res = await fetch(baseUrl + `/${endpoint}${id ? '/' + id : ''}?` + params, extras)
+  const res = await fetch(baseUrl + `/${table}${id ? '/' + id : ''}?` + params, extras)
 
   return res.json()
 }

@@ -14,7 +14,7 @@
   const lastName = getUserName('last', value);
 
   const saveComplaint = async () => {
-    const {records: [result]} = Complaints({
+    const result = Complaints({
       method: 'PATCH',
       data: {'records': [{'id': value.id, 'fields': {
         'savers': value.savers
@@ -51,7 +51,11 @@
           on:click|preventDefault|stopPropagation={toggleComplaintSaved}
           class="mr-1"
         >
-          <Heroicons icon="heart" classes="fill-on-hover" fill={saved ? 'fill' : ''} size={4} />
+        {#if saved}
+          <Heroicons icon="heart" classes="fill-on-hover" fill={true} size={4} />
+        {:else}
+          <Heroicons icon="heart" classes="fill-on-hover" size={4} />
+        {/if}
         </a>
         <span>{value.savers?.length || 0}</span>
       </div>
@@ -60,7 +64,7 @@
         <span>{value.comments?.length || 0}</span>
       </div>
       <div class="text-xs text-gray-400 flex mt-2 ml-5">
-        <div class="flex items-center mr-1"><Heroicons icon="user-circle" /></div>
+        <div class="flex items-center mr-1"><Heroicons icon="user-circle" fill={true} fillStroke={false} /></div>
         <a
           href={`?page=user&id=${complaintUserId}`}
           on:click|stopPropagation

@@ -19,7 +19,7 @@
   {#if loading}
     <Spinner />
   {:else}
-    <div class="shadow rounded w-full flex flex-col items-center justify-center p-6">
+    <div class="shadow rounded w-full flex flex-col items-center justify-center p-6 bg-white">
       <!-- <img> -->
       <div class="font-bold text-xl text-center">{user.firstName} {user.lastName}</div>
       <div class="text-sm text-gray-700 text-center">{user.email}</div>
