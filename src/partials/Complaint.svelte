@@ -64,7 +64,7 @@
         <span>{value.comments?.length || 0}</span>
       </div>
       <div class="text-xs text-gray-400 flex mt-2 ml-5">
-        <div class="flex items-center mr-1"><Heroicons icon="user-circle" fill={true} fillStroke={false} /></div>
+        <div class="flex items-center mr-1"><Heroicons icon="user" /></div>
         <a
           href={`?page=user&id=${complaintUserId}`}
           on:click|stopPropagation
