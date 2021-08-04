@@ -121,7 +121,7 @@
 
     <!-- Comment user -->
     <div class="flex">
-      <div class="flex items-center mr-1 text-gray-400"><Heroicons icon="user" /></div>
+      <div class="flex items-center mr-1 text-gray-400"><Heroicons icon="user" size={4} /></div>
       <a
         href={`?page=user&id=${commentUserId}`}
         class="text-blue-500 hover:text-blue-600 text-sm"
