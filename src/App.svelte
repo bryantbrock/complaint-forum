@@ -19,6 +19,7 @@
   ];
 
   const authenticationPages = ['signin', 'signup'];
+
   const params = getUrlParams();
   const pageExists = pages.map(val => val.page)
     .concat(authenticationPages)
