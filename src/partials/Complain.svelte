@@ -4,7 +4,7 @@
   import {complaints, Complaints} from '../client.js';
   import {complaining, complaintValues} from '../store.js';
 
-  const isEditing = $complaintValues.title?.length > 0;
+  $: isEditing = Boolean($complaintValues.id);
 
   let complaintSaveLoading = false;
   let errorCreatingComplaint = false;
@@ -67,7 +67,7 @@
       </svg>
     </div>
     <form on:submit|preventDefault={submitComplaint}>
-      <h1 class="font-bold text-xl mb-4 text-gray-700">New Complaint</h1>
+      <h1 class="font-bold text-xl mb-4 text-gray-700">{isEditing ? 'Edit' : 'Add'} Complaint</h1>
       <p class="mb-6 text-sm text-gray-500">Tell people whatever problem you are dealing with, dreams you want to make a reality, and random odd balls you want to throw at your local public.</p>
       {#if errorCreatingComplaint}
         <div class="rounded my-1 px-2 py-3 bg-red-100 text-red-500 text-sm">Please fill out at least the title and description.</div>

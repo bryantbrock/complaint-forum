@@ -56,10 +56,10 @@
   }
 </script>
 
-<a href={`/?page=complaint&id=${value.id}`} class="rounded shadow p-6 mt-2 hover:shadow-lg bg-white transition">
+<div class="rounded shadow p-6 mt-2 bg-white transition">
   <div class="flex flex-col pl-2 flex-grow">
     <div class="flex justify-between">
-      <h1 class="font-semibold">{value.title}</h1>
+      <a href={`/?page=complaint&id=${value.id}`} class="font-semibold text-gray-800 hover:text-blue-700">{value.title}</a>
       <p class="text-xs text-gray-400">{new Date(value.created).toDateString()}</p>
     </div>
     <span class="text-sm my-2">{value.body}</span>
@@ -84,7 +84,7 @@
           <a
             href={`?page=user&id=${complaintUserId}`}
             on:click|stopPropagation
-            class="text-blue-300 hover:text-blue-400"
+            class="text-blue-500 hover:text-blue-600"
           >
             {firstName} {lastName}
           </a>
@@ -102,7 +102,7 @@
       {/if}
     </div>
   </div>
-</a>
+</div>
 
 <Modal isOpen={confirmDelete}>
   <div class="p-8">
