@@ -5,6 +5,7 @@
   import Spinner from 'components/Spinner.svelte';
   import {Users} from '../client';
   import {v4 as uuid} from 'uuid';
+  import {cipher, decipher} from '../util/misc.js';
 
   const signin = writable({email: null, password: null});
   const signup = writable({firstName: null, lastName: null, email: null, password: null});
@@ -27,12 +28,12 @@
     let {records: [user]} = await Users({
       params: {
         'maxRecords': 1,
-        'filterByFormula': `AND(password = '${$signin.password}',email = '${$signin.email}')`,
-        'fields%5B%5D': 'email'
+        'filterByFormula': `email = '${$signin.email}'`,
+        'fields%5B%5D': ['password']
       }
     });
 
-    if (!!user) {
+    if (!!user && decipher('salthash387')(user.fields.password) === password) {
       const sessionId = uuid();
       const data = {
         'records': [{
@@ -80,7 +81,7 @@
           'firstName': firstName,
           'lastName': lastName,
           'email': email,
-          'password': password,
+          'password': cipher('salthash387')(password),
         }}
       ]}
     });
