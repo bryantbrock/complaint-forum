@@ -117,110 +117,108 @@
   }
 </script>
 
-<!-- <Modal isOpen={modalIsOpen}> -->
-  <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 rounded shadow max-w-md mx-auto">
-    <div class="">
+<div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 rounded shadow max-w-md mx-auto my-10">
+  <div class="">
 
-      {#if window.location.search === '?page=signin'}
-        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-          <!-- <div class="text-center mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
-            <Heroicons icon="lock" size ={6} />
-          </div> -->
-          <h3 class="text-center text-lg leading-6 font-medium text-gray-900 mt-4" id="modal-title">
-            Sign back in.
-          </h3>
-          <div class="mt-2">
-            {#if signinError}
-              <div class="rounded my-1 px-2 py-3 bg-red-100 text-red-500 text-sm">Unable to login with provided credentials.</div>
+    {#if window.location.search === '?page=signin'}
+      <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+        <!-- <div class="text-center mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+          <Heroicons icon="lock" size ={6} />
+        </div> -->
+        <h3 class="text-center text-lg leading-6 font-medium text-gray-900 mt-4" id="modal-title">
+          Sign back in.
+        </h3>
+        <div class="mt-2">
+          {#if signinError}
+            <div class="rounded my-1 px-2 py-3 bg-red-100 text-red-500 text-sm">Unable to login with provided credentials.</div>
+          {/if}
+          <form on:submit|preventDefault={signIn} class="flex flex-col w-full">
+            <input
+              type="email"
+              placeholder="Email"
+              bind:value={$signin.email}
+              class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
+            >
+            <input
+              type="password"
+              placeholder="Password"
+              bind:value={$signin.password}
+              class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
+            >
+            {#if signinLoading}
+              <div class="my-4"><Spinner /></div>
+            {:else}
+              <input
+                value="Sign in"
+                type="submit"
+                class="my-2 p-2 bg-blue-700  text-white rounded cursor-pointer hover:bg-blue-600"
+              >
             {/if}
-            <form on:submit|preventDefault={signIn} class="flex flex-col w-full">
-              <input
-                type="email"
-                placeholder="Email"
-                bind:value={$signin.email}
-                class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
-              >
-              <input
-                type="password"
-                placeholder="Password"
-                bind:value={$signin.password}
-                class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
-              >
-              {#if signinLoading}
-                <div class="my-4"><Spinner /></div>
-              {:else}
-                <input
-                  value="Sign in"
-                  type="submit"
-                  class="my-2 p-2 bg-blue-700  text-white rounded cursor-pointer hover:bg-blue-600"
-                >
-              {/if}
-            </form>
-            <hr class="my-4 text-gray-500" >
-            <div class="flex flex-col text-center">
-              <span>Don't have an account? <a href="/?page=signup" class="text-blue-300 hover:text-blue-500 pt-1">Sign up.</a></span>
-            </div>
+          </form>
+          <hr class="my-4 text-gray-500" >
+          <div class="flex flex-col text-center">
+            <span>Don't have an account? <a href="/?page=signup" class="text-blue-300 hover:text-blue-500 pt-1">Sign up.</a></span>
           </div>
         </div>
+      </div>
 
-      {:else if window.location.search === '?page=signup'}
-        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-          <!-- <div class="text-center mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
-            <Heroicons icon="lock" size ={6} />
-          </div> -->
-          <h3 class="text-center text-lg leading-6 font-medium text-gray-900 mt-4" id="modal-title">
-            Get started.
-          </h3>
-          <div class="mt-2">
-            {#if signupError}
-              <div class="rounded my-1 px-2 py-3 bg-red-100 text-red-500 text-sm">Please fill in all required fields.</div>
+    {:else if window.location.search === '?page=signup'}
+      <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+        <!-- <div class="text-center mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+          <Heroicons icon="lock" size ={6} />
+        </div> -->
+        <h3 class="text-center text-lg leading-6 font-medium text-gray-900 mt-4" id="modal-title">
+          Get started.
+        </h3>
+        <div class="mt-2">
+          {#if signupError}
+            <div class="rounded my-1 px-2 py-3 bg-red-100 text-red-500 text-sm">Please fill in all required fields.</div>
+          {/if}
+          <form on:submit|preventDefault={signUp} class="flex flex-col w-full">
+            <input
+              type="text"
+              placeholder="First name"
+              bind:value={$signup.firstName}
+              class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
+            >
+            <input
+              type="text"
+              placeholder="Last name"
+              bind:value={$signup.lastName}
+              class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
+            >
+            <input
+              type="email"
+              placeholder="email"
+              bind:value={$signup.email}
+              class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
+            >
+            <input
+              type="password"
+              placeholder="Password"
+              bind:value={$signup.password}
+              class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
+            >
+            {#if signinLoading}
+              <div class="my-4"><Spinner /></div>
+            {:else}
+              <input
+                value="Sign up"
+                type="submit"
+                class="my-2 p-2 bg-blue-700  text-white rounded cursor-pointer hover:bg-blue-600"
+              >
             {/if}
-            <form on:submit|preventDefault={signUp} class="flex flex-col w-full">
-              <input
-                type="text"
-                placeholder="First name"
-                bind:value={$signup.firstName}
-                class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
-              >
-              <input
-                type="text"
-                placeholder="Last name"
-                bind:value={$signup.lastName}
-                class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
-              >
-              <input
-                type="email"
-                placeholder="email"
-                bind:value={$signup.email}
-                class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
-              >
-              <input
-                type="password"
-                placeholder="Password"
-                bind:value={$signup.password}
-                class="rounded border border-gray-200 p-2 w-full mt-2 mx-auto"
-              >
-              {#if signinLoading}
-                <div class="my-4"><Spinner /></div>
-              {:else}
-                <input
-                  value="Sign up"
-                  type="submit"
-                  class="my-2 p-2 bg-blue-700  text-white rounded cursor-pointer hover:bg-blue-600"
-                >
-              {/if}
-            </form>
-            <hr class="my-4 text-gray-500" >
-            <div class="flex flex-col text-center">
-              <span>Already have an account? <a href="/?page=signin" class="text-blue-300 hover:text-blue-500 pt-1">Sign in.</a></span>
-            </div>
+          </form>
+          <hr class="my-4 text-gray-500" >
+          <div class="flex flex-col text-center">
+            <span>Already have an account? <a href="/?page=signin" class="text-blue-300 hover:text-blue-500 pt-1">Sign in.</a></span>
           </div>
         </div>
-      {/if}
+      </div>
+    {/if}
 
-    </div>
   </div>
-<!-- </Modal> -->
+</div>
 
 <style lang="postcss">
   input:not([type=submit]):focus {

@@ -92,10 +92,10 @@
       </div>
       {#if currentUserId === complaintUserId}
       <div class="flex">
-          <div class="text-xs text-gray-400 flex rounded-full p-2 hover:bg-gray-100 mr-2" on:click|preventDefault={editComplaint}>
+          <div class="text-xs text-gray-400 flex rounded-full p-2 hover:bg-gray-100 mr-2 cursor-pointer" on:click|preventDefault={editComplaint}>
             <Heroicons icon="pencil" size={4} />
           </div>
-          <div class="text-xs text-gray-400 flex rounded-full p-2 hover:bg-gray-100" on:click|preventDefault={() => confirmDelete = true}>
+          <div class="text-xs text-gray-400 flex rounded-full p-2 hover:bg-gray-100 cursor-pointer" on:click|preventDefault={() => confirmDelete = true}>
             <Heroicons icon="trash" size={4} />
           </div>
         </div>
