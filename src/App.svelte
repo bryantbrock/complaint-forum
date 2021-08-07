@@ -5,10 +5,13 @@
   import Complaint from 'pages/Complaint.svelte';
   import User from 'pages/User.svelte';
   import Footer from 'partials/Footer.svelte';
+  import Complain from 'partials/Complain.svelte';
   import Header from 'partials/Header.svelte';
   import Authentication from 'partials/Authentication.svelte';
   import {getUrlParams} from 'util/misc.js';
-  import {Users} from './client';
+  import {complaining, isAuthenticated, complaintValues} from './store.js';
+  import {getUser} from './actions.js';
+  import {publicPages} from './constants.js';
 
   const pages = [
     {page: 'home', Component: Home},
@@ -16,37 +19,26 @@
     {page: 'user', Component: User},
     {page: 'signin', Component: Authentication},
     {page: 'signup', Component: Authentication},
-  ];
-
-  const authenticationPages = ['signin', 'signup'];
+  ];  
 
   const params = getUrlParams();
-  const pageExists = pages.map(val => val.page)
-    .concat(authenticationPages)
-    .includes(params.page);
+  const pageExists = pages.map(val => val.page).includes(params.page);
 
+  // Redirect to home on 404
   if (!pageExists) {
-    window.location.search = '?page=home'
+    window.location.search = '?page=home';
   }
 
   onMount(async () => {
-    const userId = localStorage.getItem('userId');
-    const sessionId = localStorage.getItem('sessionId');
-    let {records: [user]} = await Users({
-      params: {
-        'maxRecords': 1,
-        'filterByFormula': `SEARCH('${userId}', {id})`,
-        'filterByFormula': `SEARCH('${sessionId}', {sessionId})`
-      }
-    });
+    await getUser();
 
-    // Redirect to signin by default if signed out
-    if (!user && !authenticationPages.includes(params.page)) {
+    // Redirect to 'signin' by default if signed out
+    if (!$isAuthenticated && !publicPages.includes(params.page)) {
       window.location.search = '?page=signin';
     }
 
     // Redirect from signin/singup if signed in already
-    if (!!user && authenticationPages.includes(params.page)) {
+    if ($isAuthenticated && publicPages.includes(params.page)) {
       window.location.search = '?page=home';
     }
   })
@@ -54,8 +46,10 @@
 
 <Tailwind />
 
-<div class="bg-gray-50 min-h-screen h-full">
-  <div class="px-12 max-w-screen-md mx-auto">
+<div class="bg-gray-50 min-h-screen">
+
+  <!-- Static views -->
+  <div class="px-12 max-w-screen-lg mx-auto">
     <Header />
       {#each pages as {page, Component}}
         {#if page === params.page}
@@ -64,4 +58,7 @@
       {/each}
     <Footer />
   </div>
+
+  <!-- Modal views -->
+  <Complain />
 </div>

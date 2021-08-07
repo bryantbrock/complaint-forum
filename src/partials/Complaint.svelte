@@ -1,8 +1,9 @@
 <script>
   import Heroicons from 'components/Heroicons.svelte';
-  import {Complaints} from '../client';
-import Modal from '../components/Modal.svelte';
-  import {getUserName} from '../util/misc.js';
+  import { Complaints } from '../client';
+  import { getUserName } from '../util/misc.js';
+  import Modal from '../components/Modal.svelte';
+  import { complaining, complaintValues } from '../store';
 
   export let value;
   export let remove;
@@ -15,6 +16,13 @@ import Modal from '../components/Modal.svelte';
   const [complaintUserId] = value.userId;
   const firstName = getUserName('first', value);
   const lastName = getUserName('last', value);
+
+  const editComplaint = () => {
+    const {title, body, tags, status} = value;
+
+    complaintValues.set({title, body, tags, status, id: value.id});
+    complaining.set(true);
+  }
 
   const deleteComplaint = () => {
     remove(value.id);
@@ -83,8 +91,13 @@ import Modal from '../components/Modal.svelte';
         </div>
       </div>
       {#if currentUserId === complaintUserId}
-        <div class="text-xs text-gray-400 flex rounded-full p-2 hover:bg-gray-100" on:click|preventDefault={() => confirmDelete = true}>
-          <Heroicons icon="trash" size={4} />
+      <div class="flex">
+          <div class="text-xs text-gray-400 flex rounded-full p-2 hover:bg-gray-100 mr-2" on:click|preventDefault={editComplaint}>
+            <Heroicons icon="pencil" size={4} />
+          </div>
+          <div class="text-xs text-gray-400 flex rounded-full p-2 hover:bg-gray-100" on:click|preventDefault={() => confirmDelete = true}>
+            <Heroicons icon="trash" size={4} />
+          </div>
         </div>
       {/if}
     </div>

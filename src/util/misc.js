@@ -66,3 +66,13 @@ export const pluralize = (num, str) =>
 
 export const getUserName = (position, obj) => 
   obj[`${position}Name (from userId)`];
+
+export const isEmpty = item => {
+  return !item
+    ? true 
+    : {
+      object: Object.keys(item).length === 0,
+      array: item.length < 1,
+      string: item.length < 1,
+    }[typeof item]
+}

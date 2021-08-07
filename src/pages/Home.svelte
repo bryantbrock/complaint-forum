@@ -3,6 +3,7 @@
   import {Complaints} from '../client';
   import {sortBy} from '../util/misc';
   import Complaint from '../partials/Complaint.svelte';
+  import Profile from '../partials/Profile.svelte';
   import Spinner from 'components/Spinner.svelte';
   import {complaints} from '../client.js';
 
@@ -45,30 +46,36 @@
 
   const debounce = value => {
 		clearTimeout(timer);
-		timer = setTimeout(() => searchForComplaints(value), 750);
+		timer = setTimeout(() => searchForComplaints(value), 400);
 	}
 </script>
 
-<div>
-  <!-- Debounced search -->
-  <input
-    type="text"
-    placeholder="Search complaints..."
-    on:input={({target: {value}}) => debounce(value)}
-    class="rounded border border-gray-200 p-2 w-full text-sm focus:outline-none focus:border focus:border-blue-400"
-  >
-  <!-- Complaints -->
-  {#if loading}
-    <div class="my-10">
-      <Spinner />
-    </div>
-  {:else if $complaints.length > 0}
-    <div class="flex flex-col">
-      {#each $complaints as complaint}
-        <Complaint value={complaint.fields} remove={deleteComplaint}></Complaint>
-      {/each}
-    </div>
-  {:else}
-    <div class="text-gray-500 text-center mt-6">No results found.</div>
-  {/if}
+<div class="flex">
+  <div class="w-8/12">
+    <!-- Debounced search -->
+    <input
+      type="text"
+      placeholder="Search complaints..."
+      on:input={({target: {value}}) => debounce(value)}
+      class="rounded border border-gray-200 p-2 w-full text-sm focus:outline-none focus:border focus:border-blue-400"
+    >
+    <!-- Complaints -->
+    {#if loading}
+      <div class="my-10">
+        <Spinner />
+      </div>
+    {:else if $complaints.length > 0}
+      <div class="flex flex-col">
+        {#each $complaints as complaint}
+          <Complaint value={complaint.fields} remove={deleteComplaint}></Complaint>
+        {/each}
+      </div>
+    {:else}
+      <div class="text-gray-500 text-center mt-6">No results found.</div>
+    {/if}
+  </div>
+  <!-- Profile Display -->
+  <div class="ml-2 w-4/12">
+    <Profile />
+  </div>
 </div>
