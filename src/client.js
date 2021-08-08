@@ -46,5 +46,3 @@ export const Complaints = createFetcher('Complaints')
 export const Comments = createFetcher('Comments')
 export const Threads = createFetcher('Threads')
 export const Users = createFetcher('Users')
-
-export const complaints = writable([])

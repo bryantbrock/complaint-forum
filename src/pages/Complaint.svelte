@@ -81,7 +81,7 @@
   {#if complaintLoading}
     <Spinner />
   {:else}
-    <div class="pt-4">
+    <div class="pt-4 mx-4">
       <div class="mb-12">
         <span class={`rounded-lg py-1 px-2 ${statusColors[complaint.status]}`}>{complaint.status}</span>
         <h1 class="mt-2 text-lg font-bold">{complaint.title}</h1>
@@ -103,7 +103,7 @@
             <input
               type="submit"
               value="Comment"
-              class="rounded bg-blue-500 text-white px-2 py-1 text-sm cursor-pointer hover:bg-blue-600 transition ml-2 mb-2"
+              class="rounded bg-green-500 text-white px-2 py-1 text-sm cursor-pointer hover:bg-green-600 transition ml-2 mb-2"
             >
           {/if}
         </form>

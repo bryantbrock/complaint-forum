@@ -125,7 +125,7 @@
         <div class="flex items-center mr-1 text-gray-400"><Heroicons icon="user" size={4} /></div>
         <a
           href={`?page=user&id=${commentUserId}`}
-          class="text-blue-500 hover:text-blue-600 text-sm"
+          class="text-green-500 hover:text-green-600 text-sm"
         >
           {commentFirstName} {commentLastName}
         </a>
@@ -152,7 +152,7 @@
           <div class="flex">
             <a
               href={`?page=user&id=${thread.userId}`}
-              class="text-blue-500 hover:text-blue-600 text-xs mt-2"
+              class="text-green-500 hover:text-green-600 text-xs mt-2"
             >
               {getUserName('first', thread)} {getUserName('last', thread)}
             </a>
@@ -184,7 +184,7 @@
               <input
                 type="submit"
                 value="Submit"
-                class="rounded bg-blue-500 text-white px-2 py-1 ml-1 text-sm cursor-pointer hover:bg-blue-600 transition"
+                class="rounded bg-green-500 text-white px-2 py-1 ml-1 text-sm cursor-pointer hover:bg-green-600 transition"
               >
             {/if}
           </form>

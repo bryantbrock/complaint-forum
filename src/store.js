@@ -10,11 +10,14 @@ export const isAuthenticated = derived(
 )
 
 // Complaints
+export const complaints = writable([])
 export const complaining = writable(false)
 export const complaintValues = writable({
   id: null,
   title: null,
   body: null,
+  amount: null,
   tags: [],
+  payment: 'Negotiable',
   status: 'Open',
 })

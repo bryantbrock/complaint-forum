@@ -5,27 +5,23 @@
   import Complaint from '../partials/Complaint.svelte';
   import Profile from '../partials/Profile.svelte';
   import Spinner from 'components/Spinner.svelte';
-  import {complaints} from '../client.js';
+  import {complaints} from '../store.js';
 
   let timer;
   let loading = true;
 
+  $: hasComplaints = $complaints.length > 0
+
   onMount(() => getComplaints());
 
-  const deleteComplaint = id => {
-    Complaints({method: 'DELETE', id});
-
-    $complaints = $complaints.filter(complaint => complaint.id !== id);
-  }
-
   const getComplaints = async () => {
-    if ($complaints.length > 0) {
+    if (hasComplaints) {
       return;
     }
   
     let {records: data} = await Complaints();
 
-    $complaints = sortBy('createdTime', data);
+    complaints.set(sortBy('createdTime', data));
     loading = false;
   };
 
@@ -51,23 +47,25 @@
 </script>
 
 <div class="flex">
-  <div class="w-8/12">
+  <div class="w-full md:w-8/12">
     <!-- Debounced search -->
-    <input
-      type="text"
-      placeholder="Search complaints..."
-      on:input={({target: {value}}) => debounce(value)}
-      class="rounded border border-gray-200 p-2 w-full text-sm focus:outline-none focus:border focus:border-blue-400"
-    >
+    <div class="mx-4">
+      <input
+        type="text"
+        placeholder="Search complaints..."
+        on:input={({target: {value}}) => debounce(value)}
+        class="rounded border border-gray-200 p-3 w-full text-sm focus:outline-none focus:border focus:border-green-400"
+      >
+    </div>
     <!-- Complaints -->
     {#if loading}
       <div class="my-10">
         <Spinner />
       </div>
     {:else if $complaints.length > 0}
-      <div class="flex flex-col">
+      <div class="flex flex-col m-4 shadow-sm border">
         {#each $complaints as complaint}
-          <Complaint value={complaint.fields} remove={deleteComplaint}></Complaint>
+          <Complaint value={complaint.fields}></Complaint>
         {/each}
       </div>
     {:else}
@@ -75,7 +73,7 @@
     {/if}
   </div>
   <!-- Profile Display -->
-  <div class="ml-2 w-4/12">
+  <div class="w-0 md:ml-2 md:w-4/12">
     <Profile />
   </div>
 </div>

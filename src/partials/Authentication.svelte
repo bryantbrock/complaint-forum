@@ -122,7 +122,7 @@
 
     {#if window.location.search === '?page=signin'}
       <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-        <!-- <div class="text-center mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+        <!-- <div class="text-center mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
           <Heroicons icon="lock" size ={6} />
         </div> -->
         <h3 class="text-center text-lg leading-6 font-medium text-gray-900 mt-4" id="modal-title">
@@ -151,20 +151,20 @@
               <input
                 value="Sign in"
                 type="submit"
-                class="my-2 p-2 bg-blue-700  text-white rounded cursor-pointer hover:bg-blue-600"
+                class="my-2 p-2 bg-green-700  text-white rounded cursor-pointer hover:bg-green-600"
               >
             {/if}
           </form>
           <hr class="my-4 text-gray-500" >
           <div class="flex flex-col text-center">
-            <span>Don't have an account? <a href="/?page=signup" class="text-blue-300 hover:text-blue-500 pt-1">Sign up.</a></span>
+            <span>Don't have an account? <a href="/?page=signup" class="text-green-300 hover:text-green-500 pt-1">Sign up.</a></span>
           </div>
         </div>
       </div>
 
     {:else if window.location.search === '?page=signup'}
       <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-        <!-- <div class="text-center mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+        <!-- <div class="text-center mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
           <Heroicons icon="lock" size ={6} />
         </div> -->
         <h3 class="text-center text-lg leading-6 font-medium text-gray-900 mt-4" id="modal-title">
@@ -205,13 +205,13 @@
               <input
                 value="Sign up"
                 type="submit"
-                class="my-2 p-2 bg-blue-700  text-white rounded cursor-pointer hover:bg-blue-600"
+                class="my-2 p-2 bg-green-700  text-white rounded cursor-pointer hover:bg-green-600"
               >
             {/if}
           </form>
           <hr class="my-4 text-gray-500" >
           <div class="flex flex-col text-center">
-            <span>Already have an account? <a href="/?page=signin" class="text-blue-300 hover:text-blue-500 pt-1">Sign in.</a></span>
+            <span>Already have an account? <a href="/?page=signin" class="text-green-300 hover:text-green-500 pt-1">Sign in.</a></span>
           </div>
         </div>
       </div>
@@ -222,6 +222,6 @@
 
 <style lang="postcss">
   input:not([type=submit]):focus {
-    @apply outline-none border border-blue-400;
+    @apply outline-none border border-green-400;
   }
 </style>

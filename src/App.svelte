@@ -9,7 +9,7 @@
   import Header from 'partials/Header.svelte';
   import Authentication from 'partials/Authentication.svelte';
   import {getUrlParams} from 'util/misc.js';
-  import {complaining, isAuthenticated, complaintValues} from './store.js';
+  import {isAuthenticated} from './store.js';
   import {getUser} from './actions.js';
   import {publicPages} from './constants.js';
 
@@ -46,10 +46,10 @@
 
 <Tailwind />
 
-<div class="bg-gray-50 min-h-screen">
+<div class="bg-gray-100 min-h-screen">
 
   <!-- Static views -->
-  <div class="px-12 max-w-screen-lg mx-auto">
+  <div class="max-w-screen-lg mx-auto">
     <Header />
       {#each pages as {page, Component}}
         {#if page === params.page}

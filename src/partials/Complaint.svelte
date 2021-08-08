@@ -1,45 +1,32 @@
 <script>
   import Heroicons from 'components/Heroicons.svelte';
+  import Modal from '../components/Modal.svelte';
   import { Complaints } from '../client';
   import { getUserName } from '../util/misc.js';
-  import Modal from '../components/Modal.svelte';
-  import { complaining, complaintValues } from '../store';
+  import { complaining, complaintValues, complaints } from '../store';
 
   export let value;
-  export let remove;
   
   const currentUserId = localStorage.getItem('userId');
 
   let saved = !!value.savers?.includes(currentUserId);
   let confirmDelete = false;
+  let headerTextColor = 'text-gray-800';
 
   const [complaintUserId] = value.userId;
   const firstName = getUserName('first', value);
   const lastName = getUserName('last', value);
 
   const editComplaint = () => {
-    const {title, body, tags, status} = value;
-
-    complaintValues.set({title, body, tags, status, id: value.id});
+    complaintValues.set(value);
     complaining.set(true);
   }
 
   const deleteComplaint = () => {
-    remove(value.id);
+    Complaints({method: 'DELETE', id: value.id});
+
+    complaints.set($complaints.filter(complaint => complaint.id !== value.id));
     confirmDelete = false;
-  }
-
-  const saveComplaint = async () => {
-    const result = Complaints({
-      method: 'PATCH',
-      data: {'records': [{'id': value.id, 'fields': {
-        'savers': value.savers
-      }}]}
-    });
-
-    if (!result) {
-      console.error('Failed to save complaint. Please try again.')
-    }
   }
 
   const toggleComplaintSaved = () => {
@@ -52,17 +39,36 @@
     }
     saved = !saved;
 
-    saveComplaint();
+    Complaints({
+      method: 'PATCH',
+      data: {'records': [{'id': value.id, 'fields': {'savers': value.savers}}]}
+    });
   }
+
+  const handleMouseOver = () => headerTextColor = 'text-green-700';
+  const handleMouseLeave = () => headerTextColor = 'text-gray-800';
 </script>
 
-<div class="rounded shadow p-6 mt-2 bg-white transition">
+<a
+  href={`/?page=complaint&id=${value.id}`}
+  class="border-b border-gray-200 p-6 bg-white hover:bg-gray-50"
+  on:mouseover={handleMouseOver}
+  on:mouseout={handleMouseLeave}
+>
   <div class="flex flex-col pl-2 flex-grow">
     <div class="flex justify-between">
-      <a href={`/?page=complaint&id=${value.id}`} class="font-semibold text-gray-800 hover:text-blue-700">{value.title}</a>
+      <div class={`font-semibold ${headerTextColor}`}>{value.title}</div>
       <p class="text-xs text-gray-400">{new Date(value.created).toDateString()}</p>
     </div>
+    <div class="flex">
+      <span class="text-xs font-semibold mt-1 text-gray-500">{value.payment}-price: {value.amount ? `$${value.amount}` : 'Unspecified'}</span>
+    </div>
     <span class="text-sm my-2">{value.body}</span>
+    <div class="my-1">
+      {#each value.tags as tag}
+        <span class="px-2 py-1 font-light rounded-lg bg-gray-100 text-sm mr-2">{tag}</span>
+      {/each}
+    </div>
     <div class={`flex ${currentUserId === complaintUserId && 'justify-between'}`}>
       <div class="flex">
         <div class="text-xs text-gray-400 flex mt-2">
@@ -84,25 +90,32 @@
           <a
             href={`?page=user&id=${complaintUserId}`}
             on:click|stopPropagation
-            class="text-blue-500 hover:text-blue-600"
+            class="text-green-500 hover:text-green-600"
           >
             {firstName} {lastName}
           </a>
         </div>
       </div>
+      <!-- Edit and Delete -->
       {#if currentUserId === complaintUserId}
-      <div class="flex">
-          <div class="text-xs text-gray-400 flex rounded-full p-2 hover:bg-gray-100 mr-2 cursor-pointer" on:click|preventDefault={editComplaint}>
+        <div class="flex">
+          <div
+            class="text-xs text-gray-400 flex rounded-full p-2 hover:bg-gray-100 mr-2 cursor-pointer border"
+            on:click|preventDefault={editComplaint}
+          >
             <Heroicons icon="pencil" size={4} />
           </div>
-          <div class="text-xs text-gray-400 flex rounded-full p-2 hover:bg-gray-100 cursor-pointer" on:click|preventDefault={() => confirmDelete = true}>
+          <div
+            class="text-xs text-gray-400 flex rounded-full p-2 hover:bg-gray-100 cursor-pointer border"
+            on:click|preventDefault={() => confirmDelete = true}
+          >
             <Heroicons icon="trash" size={4} />
           </div>
         </div>
       {/if}
     </div>
   </div>
-</div>
+</a>
 
 <Modal isOpen={confirmDelete}>
   <div class="p-8">
