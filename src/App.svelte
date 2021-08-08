@@ -46,7 +46,7 @@
 
 <Tailwind />
 
-<div class="bg-gray-100 min-h-screen">
+<div class="bg-gray-100 min-h-screen base">
 
   <!-- Static views -->
   <div class="max-w-screen-lg mx-auto">

@@ -9,7 +9,7 @@
 </script>
 
 <div class={`p-4 flex ${$isAuthenticated ? 'justify-between' : 'justify-center'}`}>
-  {#if !!document.referrer && $isAuthenticated}
+  <!-- {#if !!document.referrer && $isAuthenticated}
     <div class="flex">
       <a 
         on:click|preventDefault={() => window.history.back()}
@@ -21,7 +21,7 @@
         </svg>
       </a>
     </div>
-  {/if}
+  {/if} -->
   <div class="flex flex-col">
     <a href="/?page=home" class="font-bold text-xl">
       Complaint Forum

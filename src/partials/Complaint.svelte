@@ -6,6 +6,7 @@
   import { complaining, complaintValues, complaints } from '../store';
 
   export let value;
+  export let customClass;
   
   const currentUserId = localStorage.getItem('userId');
 
@@ -51,7 +52,7 @@
 
 <a
   href={`/?page=complaint&id=${value.id}`}
-  class="border-b border-gray-200 p-6 bg-white hover:bg-gray-50"
+  class={`border-b border-gray-200 p-6 bg-white hover:bg-gray-50 ${customClass}`}
   on:mouseover={handleMouseOver}
   on:mouseout={handleMouseLeave}
 >
@@ -81,11 +82,11 @@
           </a>
           <span>{value.savers?.length || 0}</span>
         </div>
-        <div class="text-xs text-gray-400 flex p-2 ml-5">
+        <div class="text-xs text-gray-400 flex p-2 ml-3">
           <div class="flex items-center mr-1"><Heroicons icon="chat-alt" size={4} /></div>
           <span>{value.comments?.length || 0}</span>
         </div>
-        <div class="text-xs text-gray-400 flex p-2 ml-5">
+        <div class="text-xs text-gray-400 flex p-2 ml-3">
           <div class="flex items-center mr-1"><Heroicons icon="user" size={4} /></div>
           <a
             href={`?page=user&id=${complaintUserId}`}
@@ -100,7 +101,7 @@
       {#if currentUserId === complaintUserId}
         <div class="flex">
           <div
-            class="text-xs text-gray-400 flex rounded-full p-2 hover:bg-gray-100 mr-2 cursor-pointer border"
+            class="text-xs text-gray-400 flex rounded-full p-2 hover:bg-gray-100 mr-1 cursor-pointer border"
             on:click|preventDefault={editComplaint}
           >
             <Heroicons icon="pencil" size={4} />
@@ -124,7 +125,7 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </div>
-    <p>Are you sure you want to delete this complaint?</p>
+    <p class="mr-8">Are you sure you want to delete this complaint?</p>
     <form on:submit={deleteComplaint}>
       <input
         type="submit"

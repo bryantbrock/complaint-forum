@@ -63,9 +63,15 @@
         <Spinner />
       </div>
     {:else if $complaints.length > 0}
-      <div class="flex flex-col m-4 shadow-sm border">
-        {#each $complaints as complaint}
-          <Complaint value={complaint.fields}></Complaint>
+      <div class="flex flex-col m-4 shadow-sm border rounded">
+        {#each $complaints as complaint, idx}
+          <Complaint
+            value={complaint.fields}
+            customClass={
+              idx === 0 ? 'rounded-t' :
+              idx === $complaints.length-1 ? 'rounded-b' : ''
+            }
+          />
         {/each}
       </div>
     {:else}
